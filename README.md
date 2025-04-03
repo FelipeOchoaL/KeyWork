@@ -43,3 +43,30 @@ Para obtener el proyecto en tu equipo, usa el siguiente comando:
 git clone https://github.com/FelipeOchoaL/KeyWork.git
 cd djangoproject
 ```
+## Ejecutar el proyecto localmente:
+Para ejecutar el proyecto Django en tu máquina local, sigue estos pasos:
+
+1. **Instalar dependencias**
+   ```sh
+   pip install -r requirements.txt
+   ```
+
+2. **Aplicar migraciones**
+   ```sh
+   python manage.py migrate
+   ```
+
+3. **Iniciar el servidor de desarrollo**
+   ```sh
+   python manage.py runserver
+   ```
+
+Esto ejecutará la aplicación en la terminal. Se abrirá en el navegador en la URL especificada (por defecto es `http://127.0.0.1:8000`).
+
+---
+
+## Ejecutar pruebas:
+Para ejecutar las pruebas del proyecto, usa el siguiente comando:
+```sh
+python manage.py test
+```

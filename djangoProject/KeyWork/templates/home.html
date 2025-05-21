@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block title %}KeyWork - Your Career Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    .welcome-container {
+        text-align: center;
+        padding: 2rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .welcome-text {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        text-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+    }
+    .main-button {
+        background-color: #00c3ff;
+        color: #fff;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin: 1rem 0;
+        width: 250px;
+        display: inline-block;
+        text-decoration: none;
+    }
+    .main-button:hover {
+        background-color: #00a8e0;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        color: #fff;
+        text-decoration: none;
+    }
+    .secondary-button {
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin: 1rem 0;
+        width: 250px;
+        display: inline-block;
+        text-decoration: none;
+    }
+    .secondary-button:hover {
+        background-color: #218838;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        color: #fff;
+        text-decoration: none;
+    }
+    .upload-options {
+        margin-top: 1.5rem;
+    }
+    .option-button {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        margin: 0.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 220px;
+        text-align: left;
+        display: inline-block;
+        text-decoration: none;
+    }
+    .option-button:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        color: #fff;
+        text-decoration: none;
+    }
+    .option-button i {
+        margin-right: 8px;
+    }
+    .auth-buttons {
+        margin-top: 2rem;
+    }
+    .auth-link {
+        color: #00c3ff;
+        margin: 0 1rem;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    .auth-link:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
+    .user-message {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        display: inline-block;
+    }
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    /* Nuevos estilos para los botones de CV */
+    .cv-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .view-cv-button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .view-cv-button:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+    
+    .update-cv-button {
+        background-color: #f39c12;
+        color: white;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .update-cv-button:hover {
+        background-color: #e67e22;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+    
+    .button-icon {
+        margin-right: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="welcome-container">
+    <div class="welcome-text">🚀 ¡Bienvenido a KeyWork! 🌟</div>
+    
+    {% if user.is_authenticated %}
+        {% if user.employerprofile_profile %}
+            <!-- Usuario autenticado como Employer -->
+            <a href="{% url 'employer_dashboard' %}" class="main-button">
+                <i class="fas fa-building"></i> Ir al Portal de Empleador
+            </a>
+            
+            <div class="user-message">
+                <p>Accede a tu portal para publicar vacantes y encontrar candidatos.</p>
+            </div>
+        {% elif user.jobseekerprofile_profile %}
+            <!-- Usuario autenticado como JobSeeker -->
+            <div class="button-container">
+                <a href="{% url 'upload_cv' %}" class="main-button">
+                    <i class="fas fa-file-upload"></i> Subir mi CV
+                </a>
+                <a href="{% url 'job_listings' %}" class="main-button">
+                    <i class="fas fa-briefcase"></i> Aplicar Empleos
+                </a>
+            </div>
+            
+            {% if user.jobseekerprofile_profile.cv %}
+                <div class="cv-buttons">
+                    <a href="{% url 'cv_detail' user.jobseekerprofile_profile.cv.pk %}" class="view-cv-button">
+                        <i class="fas fa-file-alt button-icon"></i> Ver mi CV Actual
+                    </a>
+                    <a href="{% url 'upload_cv' %}" class="update-cv-button">
+                        <i class="fas fa-sync-alt button-icon"></i> Actualizar CV
+                    </a>
+                </div>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <!-- Usuario no autenticado -->
+        <div>
+            <a href="{% url 'login' %}" class="main-button">
+                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+            </a>
+        </div>
+        
+        <div class="auth-buttons">
+            ¿No tienes una cuenta? <a href="{% url 'signup' %}" class="auth-link">Regístrate aquí</a>
+        </div>
+    {% endif %}
+    
+    <div class="mt-4">
+        Encuentra el trabajo perfecto con KeyWork
+    </div>
+</div>
+{% endblock %}

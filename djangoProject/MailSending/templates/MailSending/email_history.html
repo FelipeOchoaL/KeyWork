@@ -1,0 +1,172 @@
+<!-- KeyWorkProject/MailSending/templates/MailSending/email_history.html -->
+{% extends 'base.html' %}
+
+{% block title %}Historial de Correos - KeyWork{% endblock %}
+
+{% block extra_css %}
+<style>
+    .history-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: var(--accent);
+    }
+    
+    .table-container {
+        background-color: rgba(255, 255, 255, 0.08);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .email-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .email-table th {
+        background-color: rgba(0, 0, 0, 0.2);
+        color: var(--accent);
+        text-align: left;
+        padding: 1rem;
+    }
+    
+    .email-table td {
+        padding: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .email-table tr:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .status-success {
+        background-color: rgba(46, 204, 113, 0.2);
+        color: #2ecc71;
+    }
+    
+    .status-failed {
+        background-color: rgba(231, 76, 60, 0.2);
+        color: #e74c3c;
+    }
+    
+    .no-emails {
+        text-align: center;
+        padding: 3rem;
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+    }
+    
+    .no-emails i {
+        font-size: 3rem;
+        color: var(--accent);
+        margin-bottom: 1rem;
+        display: block;
+    }
+    
+    .back-link {
+        color: #fff;
+        opacity: 0.8;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        margin-bottom: 2rem;
+        transition: all 0.3s;
+    }
+    
+    .back-link:hover {
+        opacity: 1;
+        color: #00c3ff;
+    }
+    
+    .back-link i {
+        margin-right: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="history-container">
+    <a href="{% url 'profile' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Volver al Perfil
+    </a>
+    
+    <h1 class="page-title">
+        <i class="fas fa-envelope"></i> Historial de Correos Enviados
+    </h1>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} mb-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    {% if emails %}
+        <div class="table-container">
+            <table class="email-table">
+                <thead>
+                    <tr>
+                        <th>Destinatario</th>
+                        <th>Fecha de Envío</th>
+                        <th>Estado</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for email in emails %}
+                        <tr>
+                            <td>{{ email.recipient_email }}</td>
+                            <td>{{ email.sent_at|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if email.status == 'success' %}
+                                    <span class="status-badge status-success">Enviado</span>
+                                {% else %}
+                                    <span class="status-badge status-failed">Fallido</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if email.status == 'failed' and email.error_message %}
+                                    <button class="btn btn-sm btn-outline-danger" 
+                                            type="button" 
+                                            data-bs-toggle="collapse" 
+                                            data-bs-target="#error-{{ email.id }}" 
+                                            aria-expanded="false">
+                                        Ver error
+                                    </button>
+                                    <div class="collapse mt-2" id="error-{{ email.id }}">
+                                        <div class="alert alert-danger">
+                                            {{ email.error_message }}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <small class="text-muted">CV enviado a {{ email.recipient_email }}</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="no-emails">
+            <i class="fas fa-envelope-open"></i>
+            <h3>No has enviado ningún correo</h3>
+            <p>Cuando envíes tu CV por correo electrónico, el historial aparecerá aquí.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
